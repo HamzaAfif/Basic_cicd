@@ -1,0 +1,15 @@
+services:
+  java-service:
+    build: .
+    ports:
+      - "8080:8080"
+
+  node-service:
+    build: ./nodejs-app
+    ports:
+      - "3000:3000"
+
+  python-service:
+    build: ./python-app
+    ports:
+      - "5000:5000"
