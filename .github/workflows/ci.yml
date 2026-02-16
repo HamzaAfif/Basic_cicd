@@ -39,7 +39,7 @@ jobs:
 
 
       - name: Maven Build + Test
-        run: mvn clean verify
+        run: mvn clean verify sonar:sonar
 
       - name: Build Java Docker Image
         run: docker build -t java-service .
