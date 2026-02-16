@@ -53,6 +53,7 @@ jobs:
         run: |
           cd nodejs-app
           npm install
+          chmod +x ./node_modules/.bin/jest
           npm test
 
       - name: Build Node Docker Image
