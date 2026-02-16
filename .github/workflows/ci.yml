@@ -26,8 +26,12 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@v2
         with:
           projectBaseDir: .
+          args: >
+            -Dsonar.projectKey=HamzaAfif_Basic_cicd
+            -Dsonar.organization=hamzaafif
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
 
 
       - name: Build Docker image
