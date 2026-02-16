@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: Professional CI/CD Pipeline
 
 on:
   push:
@@ -6,32 +6,22 @@ on:
   pull_request:
     branches: ["main"]
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
-  ci-pipeline:
+
+  java-build-analysis:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Java 17
+      - uses: actions/checkout@v4
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
           cache: maven
-
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.9'
-
-      - name: Set up Node.js 18
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: './nodejs-app/package-lock.json'
 
       - name: Build & Test Java
         run: mvn clean verify
@@ -49,16 +39,37 @@ jobs:
       - name: Build Java Docker Image
         run: docker build -t java-service .
 
+
+  node-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: './nodejs-app/package-lock.json'
+
       - name: Node.js Test
         run: |
           cd nodejs-app
           npm ci
-          chmod +x ./node_modules/.bin/jest
-          npm test
+          npx jest
 
       - name: Build Node Docker Image
         run: docker build -t nodejs-service -f nodejs-app/Dockerfile ./nodejs-app
 
+  # --- JOB 3: PYTHON (Runs in parallel) ---
+  python-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+          cache: 'pip'
 
       - name: Python Test
         run: |
@@ -69,8 +80,13 @@ jobs:
       - name: Build Python Docker Image
         run: docker build -t python-service -f python-app/Dockerfile ./python-app
 
+
+  delivery:
+    needs: [java-build-analysis, node-test, python-test]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
       - name: CI Success Message
         run: |
-          echo "✅ SonarCloud passed"
-          echo "✅ Java, Node, + Python builds OK"
-          echo "✅ All Docker images created"
+          echo "✅ All Quality Gates Passed"
+          echo "🚀 Ready for Deployment"
