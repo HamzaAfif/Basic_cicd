@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  build-test-docker:
+  build-test-sonar:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,11 +19,15 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Build with Maven
-        run: mvn clean package
+      - name: Build and Test
+        run: mvn clean verify
 
-      - name: Run tests
-        run: mvn test
+      - name: SonarCloud Scan
+        run: mvn sonar:sonar \
+          -Dsonar.projectKey=HamzaAfif_Basic_cicd \
+          -Dsonar.organization=hamzaafif \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
       - name: Build Docker image
-        run: docker build -t hello-devops .
+        run: docker build -t tp1demo .
