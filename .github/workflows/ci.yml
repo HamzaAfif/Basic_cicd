@@ -52,7 +52,7 @@ jobs:
       - name: Node.js Test
         run: |
           cd nodejs-app
-          npm install
+          npm ci
           chmod +x ./node_modules/.bin/jest
           npm test
 
