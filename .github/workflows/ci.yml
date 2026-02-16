@@ -31,20 +31,16 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Build, Test & Sonar
-        run: mvn clean verify sonar:sonar \
+      - name: Build & Test Java
+        run: mvn clean verify
+
+      - name: SonarCloud Analysis
+        run: mvn sonar:sonar \
           -Dsonar.projectKey=HamzaAfif_Basic_cicd \
           -Dsonar.organization=hamzaafif \
           -Dsonar.host.url=https://sonarcloud.io \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v2
-        with:
-          projectBaseDir: .
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Build Java Docker Image
         run: docker build -t java-service .
