@@ -29,7 +29,10 @@ jobs:
             -Dsonar.projectKey=HamzaAfif_Basic_cicd \
             -Dsonar.organization=hamzaafif \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=$SONAR_TOKEN
+            -Dsonar.login=$SONAR_TOKEN \
+            -Dsonar.sources=src/main/java,python-app,nodejs-app \
+            -Dsonar.test.inclusions=**/*Test.java,**/*.test.js,**/test_*.py \
+            -Dsonar.javascript.node.declarationFiles=true
 
       - name: Build Java Docker Image
         run: docker build -t java-service .
