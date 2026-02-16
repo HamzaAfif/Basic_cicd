@@ -50,7 +50,7 @@ jobs:
       - name: Python Test
         run: |
           cd python-app
-          pip install -r requirements.txt pytest
+          pip install -r requirement.txt pytest
           pytest
 
       - name: Build Python Docker Image
