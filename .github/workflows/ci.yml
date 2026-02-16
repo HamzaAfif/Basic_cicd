@@ -35,17 +35,18 @@ jobs:
         run: mvn clean verify
 
       - name: SonarCloud Analysis
-        run: mvn sonar:sonar \
-          -Dsonar.projectKey=HamzaAfif_Basic_cicd \
-          -Dsonar.organization=hamzaafif \
-          -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          mvn sonar:sonar \
+            -Dsonar.projectKey=HamzaAfif_Basic_cicd \
+            -Dsonar.organization=hamzaafif \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=$SONAR_TOKEN
 
       - name: Build Java Docker Image
         run: docker build -t java-service .
 
-      # 8️⃣ Run Python tests
       - name: Python Test
         run: |
           cd python-app
