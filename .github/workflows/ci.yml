@@ -31,8 +31,13 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Build & Test Java
-        run: mvn clean verify
+      - name: Build, Test & Sonar
+        run: mvn clean verify sonar:sonar \
+          -Dsonar.projectKey=HamzaAfif_Basic_cicd \
+          -Dsonar.organization=hamzaafif \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
