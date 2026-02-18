@@ -33,6 +33,7 @@ jobs:
             -Dsonar.sources=src/main/java,python-app,nodejs-app \
             -Dsonar.test.inclusions=**/*Test.java,**/*.test.js,**/test_*.py \
             -Dsonar.exclusions="**/*.json,**/package-lock.json,**/node_modules/**,**/target/**" \
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
             -Dsonar.javascript.node.declarationFiles=true
 
       - name: Build Java Docker Image
